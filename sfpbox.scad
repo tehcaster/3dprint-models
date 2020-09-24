@@ -145,7 +145,7 @@ translate([sirka/2 + orig_sirka/2 - 9.5, delka - 2*thick - 19, thick-nit])
 sloupek();
 
 sirka_stena = sirka - 2*thick - slack;
-vyska_stena = vyska - thick - slack;
+    vyska_stena = vyska - thick - slack;
 // predni stena
 color("green")
 translate([sirka_stena/2 + thick, thick/2 + thick + slack/2, vyska_stena/2 + thick])
@@ -205,5 +205,48 @@ translate([thick, 2*thick + slack/2, vyska - thick - esp_total_vyska]) {
     // zadni okraj pro zamacknuti vikem
     translate([esp_podl_delka - thick, 2*slack + d_sl, thick - nit])
         cube([thick, esp_podl_sirka - (2* slack) - d_sl, esp_total_vyska]);
+}
 
+// horni kryt
+// usb c hole
+color("grey")
+difference() {
+    translate([thick/2, 2*thick + slack/2 + esp_podl_yshift + esp_sirka/2, vyska - 3/2 + nit])
+        cube([thick, 9, 3], center = true);
+    translate([thick/2, 2*thick + slack/2 + esp_podl_yshift + esp_sirka/2, vyska + (3+slack)/2 - esp_vyska_lcd])
+        rotate([90, 0, 90])
+            roundedBox(size = [9 + slack, 3 + slack, thick+nit],
+                radius = 1.5, sidesonly = true);
+    
+}
+
+color("grey")
+union() {
+    // kolem predni desky
+    translate([thick + vym + slack/2, 0, vyska - vym + nit])
+        cube([sirka - 2*thick - 2*vym - slack, thick, vym]);
+    translate([thick + esp_prostor_vpredu + slack / 2, 2*thick + slack, vyska - vym + nit])
+        cube([esp_hrebinek_delka - slack, thick, vym]);
+    translate([thick + esp_delka + thick + slack / 2, 2*thick + slack, vyska - vym + nit])
+        cube([sirka - esp_delka - 2*thick - d_sl, thick, vym]);
+
+    // kolem zadni desky
+    translate([thick + vym + slack/2, delka - thick, vyska - vym + nit])
+        cube([sirka - 2*thick - 2*vym - slack, thick, vym]);
+    translate([d_sl, delka - 3*thick - slack, vyska - vym + nit])
+        cube([sirka - 2*d_sl, thick, vym]);
+    
+    // kolem leve steny
+    translate([thick + slack/2, 2*thick + esp_podl_sirka + 2*slack + d_sl, vyska - vym + nit])
+        cube([thick, delka - 4*thick - 2*d_sl - esp_podl_sirka - 4*slack, vym]);
+    // kolem prave steny
+    translate([sirka - 2*thick - slack/2, 2*thick + esp_podl_sirka + 2*slack + d_sl, vyska - vym + nit])
+        cube([thick, delka - 4*thick - 2*d_sl - esp_podl_sirka - 4*slack, vym]);
+    
+    // zamacknuti esp32 vzadu
+    translate([thick + esp_delka - esp_prostor_vzadu, 2*thick + esp_podl_yshift + 2*slack, vyska - (esp_vyska_lcd - slack/2) + nit])
+        cube([esp_prostor_vzadu, vym, esp_vyska_lcd - slack/2]);
+    translate([thick + esp_delka - esp_prostor_vzadu, thick + esp_podl_sirka - vym, vyska - (esp_vyska_lcd - slack/2) + nit])
+        cube([esp_prostor_vzadu, vym, esp_vyska_lcd - slack/2]);
+    
 }
